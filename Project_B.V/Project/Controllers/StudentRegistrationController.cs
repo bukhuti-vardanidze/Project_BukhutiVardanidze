@@ -29,9 +29,9 @@ namespace Project.Controllers
                 var result = await _studentRegistrationRepository.RegisterStudent(student);
                 return Ok(result);
             }
-            catch (InvalidOperationException ex)
-            { 
-                return BadRequest(ex.Message);
+           catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -53,9 +53,9 @@ namespace Project.Controllers
                 var result = await _studentRegistrationRepository.GetStudentById(Id);
                 return Ok(result);
             }
-            catch (InvalidOperationException ex)
+            catch (KeyNotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -76,9 +76,9 @@ namespace Project.Controllers
                 var result = await _studentRegistrationRepository.GetStudents();
                 return Ok(result);
             }
-            catch (InvalidOperationException ex)
+            catch (KeyNotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -86,6 +86,48 @@ namespace Project.Controllers
             }
         }
 
-      
+        [HttpPut]
+        public async Task<IActionResult> UpdateStudent(UpdateStudentDto updateStudent)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _studentRegistrationRepository.UpdateStudent(updateStudent);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred. Student Not Found!");
+            }
+        }
+
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteStudentById(int Id)
+        {
+            try
+            {
+                var deletedStudent = await _studentRegistrationRepository.DeleteStudentById(Id);
+
+                return Ok(deletedStudent); 
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred." });
+            }
+        }
+
     }
 }

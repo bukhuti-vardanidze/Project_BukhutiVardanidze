@@ -12,7 +12,7 @@ using Project.DB;
 namespace Project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231210190014_Initial")]
+    [Migration("20231210210141_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

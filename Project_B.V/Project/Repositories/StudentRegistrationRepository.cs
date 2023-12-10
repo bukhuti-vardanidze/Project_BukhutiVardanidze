@@ -11,6 +11,9 @@ namespace Project.Repositories
         Task<Student> RegisterStudent(StudentDto student);
         Task<Student> GetStudentById(int id);
         Task<List<Student>> GetStudents();
+        Task<Student> UpdateStudent(UpdateStudentDto updateStudent);
+        Task<Student> DeleteStudentById(int id);
+
     }
 
     public class StudentRegistrationRepository : IStudentRegistrationRepository
@@ -69,7 +72,7 @@ namespace Project.Repositories
             }
             catch (Exception ex)
             {
-                throw; 
+                throw;
             }
         }
 
@@ -86,6 +89,62 @@ namespace Project.Repositories
                 throw;
             }
         }
+
+        public async Task<Student> UpdateStudent(UpdateStudentDto updateStudent)
+        {
+            try
+            {
+                var student = await _context.Students.FindAsync(updateStudent.Id);
+
+                if (student == null)
+                {
+                    throw new KeyNotFoundException($"Student with ID {updateStudent.Id} not found.");
+                }
+
+                if (updateStudent.PhoneNumber != null)
+                {
+                    student.PhoneNumber = updateStudent.PhoneNumber;
+                }
+
+                if (updateStudent.Email != null)
+                {
+                    student.Email = updateStudent.Email;
+                }
+
+                if (updateStudent.Faculty != null)
+                {
+                    student.Faculty = updateStudent.Faculty;
+                }
+
+                student.Course = updateStudent.Course;
+
+
+                await _context.SaveChangesAsync();
+
+                return student;
+            }
+            catch (Exception ex)
+            {
+                throw; 
+            }
+        }
+
+        public async Task<Student> DeleteStudentById(int id)
+        {
+            var findStudent = await _context.Students.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (findStudent == null)
+            {                
+                throw new KeyNotFoundException($"Student with ID {id} not found.");
+            }
+
+            _context.Students.Remove(findStudent);
+            await _context.SaveChangesAsync();
+
+            return findStudent;
+        }
+
+
 
     }
 }
