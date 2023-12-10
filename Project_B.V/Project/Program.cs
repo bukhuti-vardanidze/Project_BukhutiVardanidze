@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Project.DB;
+using Project.Repositories;
 using System.Text.Json.Serialization;
 
 namespace Project
@@ -22,6 +23,8 @@ namespace Project
             {
                 options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings:DbConnection").Value);
             });
+
+            builder.Services.AddScoped<IStudentRegistrationRepository,StudentRegistrationRepository>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
