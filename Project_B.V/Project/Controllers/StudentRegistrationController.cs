@@ -87,7 +87,7 @@ namespace Project.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateStudent(UpdateStudentDto updateStudent)
+        public async Task<IActionResult> UpdateStudent([FromQuery] UpdateStudentDto updateStudent)
         {
             if (!ModelState.IsValid)
             {
